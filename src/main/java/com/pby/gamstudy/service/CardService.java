@@ -5,7 +5,7 @@ import com.pby.gamstudy.dao.CardDao;
 import com.pby.gamstudy.dao.KindDao;
 import com.pby.gamstudy.util.ArraysUtil;
 import com.pby.gamstudy.util.FileUtil;
-import com.pby.gamstudy.util.JsonUtil;
+import com.pby.gamstudy.util.gson.GsonUtil;
 import com.pby.gamstudy.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,7 +58,7 @@ public class CardService {
 
 
     public Card editCard(String cardJson, MultipartFile file) {
-        final Card card = JsonUtil.jsonToObjecr(cardJson, Card.class);
+        final Card card = GsonUtil.jsonToObject(cardJson, Card.class);
         if (card == null) {
             return null;
         }

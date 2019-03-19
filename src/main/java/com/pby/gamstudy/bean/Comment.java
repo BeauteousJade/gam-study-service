@@ -1,7 +1,9 @@
 package com.pby.gamstudy.bean;
 
 public class Comment {
+
     private String id;
+    private String postId;
     private User toUser;
     private User fromUser;
     private String content;
@@ -45,5 +47,13 @@ public class Comment {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 }
