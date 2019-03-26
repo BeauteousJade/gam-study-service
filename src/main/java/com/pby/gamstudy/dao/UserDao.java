@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface UserDao {
 
-    @Insert("insert into user (id, head, nickName, time) select #{id}, #{head}, #{nickName},#{time} from dual where not exists (select id from user where id = #{id})")
-    int register(@Param("id") String id, @Param("head") String head, @Param("nickName") String nickName, @Param("time") long time);
+    @Insert("insert into user (id, head, nickName, time, token) values(#{id}, #{head}, #{nickName},#{time}, #{token})")
+    int register(User user);
 
     @Select("select * from user where id = #{id}")
     User findUser(@Param("id") String id);

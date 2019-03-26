@@ -2,7 +2,6 @@ package com.pby.gamstudy.service;
 
 import com.pby.gamstudy.bean.Comment;
 import com.pby.gamstudy.dao.CommentDao;
-import com.pby.gamstudy.util.StringUtil;
 import com.pby.gamstudy.util.gson.GsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,7 +18,6 @@ public class CommentService {
             return null;
         }
         comment.setTime(System.currentTimeMillis());
-        comment.setId(StringUtil.generateId());
         if (mCommentDao.addComment(comment) == 1) {
             return comment;
         }

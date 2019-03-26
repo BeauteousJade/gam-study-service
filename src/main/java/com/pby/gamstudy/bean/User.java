@@ -4,6 +4,7 @@ public class User {
     private String id;
     private String nickName;
     private String head;
+    private String token;
     private long time;
 
     public String getId() {
@@ -28,6 +29,14 @@ public class User {
 
     public void setHead(String head) {
         this.head = head;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public long getTime() {
