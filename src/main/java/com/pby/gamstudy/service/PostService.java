@@ -46,6 +46,10 @@ public class PostService {
         return null;
     }
 
+    public List<Post> findPost(String userId) {
+        return mPostDao.findPost(userId);
+    }
+
     public List<Post> findRecommendPost() {
         return mPostDao.findRecommendPost();
     }

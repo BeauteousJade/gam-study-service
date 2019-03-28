@@ -24,6 +24,11 @@ public class PostController {
         return mPostService.insertPost(postJson, multipartFiles);
     }
 
+    @PostMapping("/findPost")
+    public List<Post> findPost(@Param("userId") String userId) {
+        return mPostService.findPost(userId);
+    }
+
     @PostMapping("/findRecommendPost")
     public List<Post> findRecommendPost() {
         return mPostService.findRecommendPost();
