@@ -18,4 +18,9 @@ public class FollowController {
     public boolean followUser(@Param("fromUserId") String fromUserId, @Param("toUserId") String toUserId) {
         return followService.followUser(fromUserId, toUserId);
     }
+
+    @PostMapping("/unFollowUser")
+    public boolean unFollowUser(@Param("fromUserId") String fromUserId, @Param("toUserId") String toUserId) {
+        return followService.unFollowUser(fromUserId, toUserId);
+    }
 }

@@ -22,4 +22,8 @@ public class FollowService {
         follow.setTime(System.currentTimeMillis());
         return followDao.followUser(follow) == 1;
     }
+
+    public boolean unFollowUser(String fromUserId, String toUserId) {
+        return followDao.unFollowUser(fromUserId, toUserId) == 1;
+    }
 }

@@ -18,7 +18,7 @@ public interface PostDao {
             @Result(property = "id", column = "id"),
             @Result(property = "user", column = "userId", one = @One(select = "com.pby.gamstudy.dao.UserDao.findUser")),
             @Result(property = "commentList", column = "id", many = @Many(select = "com.pby.gamstudy.dao.CommentDao.findCommentByPostId")),
-            @Result(property = "likeUserList", column = "id", one = @One(select = "com.pby.gamstudy.dao.EnjoyDao.findLikeUserByPostId"))
+            @Result(property = "likeUserList", column = "id", many = @Many(select = "com.pby.gamstudy.dao.EnjoyDao.findLikeUserByPostId"))
     })
     List<Post> findPost(@Param("userId") String userId);
 
@@ -27,7 +27,7 @@ public interface PostDao {
             @Result(property = "id", column = "id"),
             @Result(property = "user", column = "userId", one = @One(select = "com.pby.gamstudy.dao.UserDao.findUser")),
             @Result(property = "commentList", column = "id", many = @Many(select = "com.pby.gamstudy.dao.CommentDao.findCommentByPostId")),
-            @Result(property = "likeUserList", column = "id", one = @One(select = "com.pby.gamstudy.dao.EnjoyDao.findLikeUserByPostId"))
+            @Result(property = "likeUserList", column = "id", many = @Many(select = "com.pby.gamstudy.dao.EnjoyDao.findLikeUserByPostId"))
     })
     List<Post> findRecommendPost();
 
@@ -36,7 +36,7 @@ public interface PostDao {
             @Result(property = "id", column = "id"),
             @Result(property = "user", column = "userId", one = @One(select = "com.pby.gamstudy.dao.UserDao.findUser")),
             @Result(property = "commentList", column = "id", many = @Many(select = "com.pby.gamstudy.dao.CommentDao.findCommentByPostId")),
-            @Result(property = "likeUserList", column = "id", one = @One(select = "com.pby.gamstudy.dao.EnjoyDao.findLikeUserByPostId"))
+            @Result(property = "likeUserList", column = "id", many = @Many(select = "com.pby.gamstudy.dao.EnjoyDao.findLikeUserByPostId"))
     })
     List<Post> findFollowPost(@Param("userId") String userId);
 

@@ -1,6 +1,7 @@
 package com.pby.gamstudy.dao;
 
 import com.pby.gamstudy.CheckSumBuilder;
+import com.pby.gamstudy.bean.IMMessage;
 import com.pby.gamstudy.bean.IMUser;
 import com.pby.gamstudy.util.gson.GsonUtil;
 import okhttp3.*;
@@ -15,10 +16,21 @@ public class IMDao {
 
     String appKey = "62a6c7a3aa03c227d48a0c1e63b1073f";
     String appSecret = "7ac655bbff79";
-    String imBaseUrl = "https://api.netease.im/nimserver/user/";
+    private static final String USER_URL = "https://api.netease.im/nimserver/user/";
+    private static final String MESSAGE_URL = "https://api.netease.im/nimserver/msg/";
 
-    public IMUser create(String userId) {
-        Response response = getResponse(imBaseUrl + "create.action", userId);
+    private OkHttpClient okHttpClient = new OkHttpClient();
+
+    /**
+     * 注册用户
+     *
+     * @param userId
+     * @return
+     */
+    public IMUser createUser(String userId) {
+        Response response = getResponse(USER_URL + "create.action", () -> new FormBody.Builder()
+                .add("accid", userId)
+                .build());
         if (response != null && response.body() != null) {
             try {
                 return GsonUtil.getValues(response.body().string(), "info", IMUser.class);
@@ -29,9 +41,39 @@ public class IMDao {
         return null;
     }
 
+    public boolean sendMessage(IMMessage imMesssage) {
+        Response response = getResponse(MESSAGE_URL + "sendMsg.action", () -> new FormBody.Builder()
+                .add("from", imMesssage.getFromUserId())
+                .add("ope", "0")
+                .add("to", imMesssage.getToUserId())
+                .add("type", "0")
+                .add("body", imMesssage.getContent())
+                .build());
+        if (response != null && response.body() != null) {
+            try {
+                if (GsonUtil.getCode(response.body().string()) == 200) {
+                    return true;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 
-    private Response getResponse(String url, String accid) {
-        OkHttpClient okHttpClient = new OkHttpClient();
+    private Response getResponse(String url, RequestBodyCallback callback) {
+        Request.Builder requestBuilder = generateRequestBuilder(url);
+        RequestBody requestBody = callback.generateRequestBody();
+        Request request = requestBuilder.post(requestBody).build();
+        try {
+            return okHttpClient.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Request.Builder generateRequestBuilder(String url) {
         Request.Builder builder = new Request.Builder().url(url);
         String nonce = String.valueOf((int) (Math.random() * Integer.MAX_VALUE));
         String curTime = String.valueOf((new Date()).getTime() / 1000L);
@@ -41,15 +83,10 @@ public class IMDao {
         builder.addHeader("CurTime", curTime);
         builder.addHeader("CheckSum", checkSum);
         builder.addHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-        RequestBody requestBody = new FormBody.Builder()
-                .add("accid", accid)
-                .build();
-        Request request = builder.post(requestBody).build();
-        try {
-            return okHttpClient.newCall(request).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return builder;
+    }
+
+    private interface RequestBodyCallback {
+        RequestBody generateRequestBody();
     }
 }

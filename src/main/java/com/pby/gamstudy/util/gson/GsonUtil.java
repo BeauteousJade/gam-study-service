@@ -26,12 +26,23 @@ public class GsonUtil {
         return GSON.toJson(object);
     }
 
-    public static <T> T getValues(String json, String key, Class<? extends T> calzz) {
+    public static <T> T getValues(String json, String key, Class<? extends T> clazz) {
         JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
-        JsonElement jsonElement = jsonObject.get(key);
-        if (jsonElement != null) {
-            return GSON.fromJson(jsonElement, calzz);
+        if (getCode(jsonObject) == 200) {
+            JsonElement jsonElement = jsonObject.get(key);
+            if (jsonElement != null) {
+                return GSON.fromJson(jsonElement, clazz);
+            }
         }
         return null;
+    }
+
+    public static int getCode(String json) {
+        JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
+        return getCode(jsonObject);
+    }
+
+    public static int getCode(JsonObject jsonObject) {
+        return jsonObject.get("code").getAsInt();
     }
 }
