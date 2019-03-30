@@ -41,13 +41,13 @@ public class IMDao {
         return null;
     }
 
-    public boolean sendMessage(IMMessage imMesssage) {
+    public boolean sendMessage(IMMessage imMessage) {
         Response response = getResponse(MESSAGE_URL + "sendMsg.action", () -> new FormBody.Builder()
-                .add("from", imMesssage.getFromUserId())
+                .add("from", imMessage.getFromUserId())
                 .add("ope", "0")
-                .add("to", imMesssage.getToUserId())
+                .add("to", imMessage.getToUserId())
                 .add("type", "0")
-                .add("body", imMesssage.getContent())
+                .add("body", imMessage.getContent())
                 .build());
         if (response != null && response.body() != null) {
             try {

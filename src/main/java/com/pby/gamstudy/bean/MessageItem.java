@@ -9,6 +9,7 @@ public class MessageItem {
     private long recentTime;
     private long time;
 
+
     public String getId() {
         return id;
     }

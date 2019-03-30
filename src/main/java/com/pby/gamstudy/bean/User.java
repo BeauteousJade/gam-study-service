@@ -11,6 +11,14 @@ public class User {
     private List<Follow> followUserList;
     private List<Follow> fansUserList;
 
+
+    public User() {
+    }
+
+    public User(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
