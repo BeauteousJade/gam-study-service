@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 
 @Repository
@@ -18,6 +19,7 @@ public class IMDao {
     String appSecret = "7ac655bbff79";
     private static final String USER_URL = "https://api.netease.im/nimserver/user/";
     private static final String MESSAGE_URL = "https://api.netease.im/nimserver/msg/";
+    private static final String HISTORY_URL = "https://api.netease.im/nimserver/history/";
 
     private OkHttpClient okHttpClient = new OkHttpClient();
 
@@ -41,6 +43,12 @@ public class IMDao {
         return null;
     }
 
+    /**
+     * 发送消息
+     *
+     * @param imMessage
+     * @return
+     */
     public boolean sendMessage(IMMessage imMessage) {
         Response response = getResponse(MESSAGE_URL + "sendMsg.action", () -> new FormBody.Builder()
                 .add("from", imMessage.getFromUserId())
@@ -59,6 +67,23 @@ public class IMDao {
             }
         }
         return false;
+    }
+
+    public List<IMMessage> findHistoryMessage(String fromUserId, String toUserId) {
+        Response response = getResponse(HISTORY_URL + "querySessionMsg.action", new RequestBodyCallback() {
+            @Override
+            public RequestBody generateRequestBody() {
+                return new FormBody.Builder()
+                        .add("from", fromUserId)
+                        .add("to", toUserId)
+                        .add("begintime", String.valueOf(System.currentTimeMillis() - 24 * 60 * 60 * 1000))
+                        .add("endtime", String.valueOf(System.currentTimeMillis()))
+                        .add("limit", String.valueOf(100))
+                        .add("reverse", "1")
+                        .build();
+            }
+        });
+        return null;
     }
 
     private Response getResponse(String url, RequestBodyCallback callback) {
