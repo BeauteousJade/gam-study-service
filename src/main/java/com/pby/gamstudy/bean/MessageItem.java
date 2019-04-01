@@ -5,7 +5,10 @@ public class MessageItem {
     private String id;
     private User fromUser;
     private User toUser;
+    private String recentSendUserId;
     private String recentContent;
+    private int fromUserUnReadCount;
+    private int toUserUnReadCount;
     private long recentTime;
     private long time;
 
@@ -56,5 +59,29 @@ public class MessageItem {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public String getRecentSendUserId() {
+        return recentSendUserId;
+    }
+
+    public void setRecentSendUserId(String recentSendUserId) {
+        this.recentSendUserId = recentSendUserId;
+    }
+
+    public int getFromUserUnReadCount() {
+        return fromUserUnReadCount;
+    }
+
+    public void setFromUserUnReadCount(int fromUserUnReadCount) {
+        this.fromUserUnReadCount = fromUserUnReadCount;
+    }
+
+    public int getToUserUnReadCount() {
+        return toUserUnReadCount;
+    }
+
+    public void setToUserUnReadCount(int toUserUnReadCount) {
+        this.toUserUnReadCount = toUserUnReadCount;
     }
 }

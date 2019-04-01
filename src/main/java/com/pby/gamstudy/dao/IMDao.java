@@ -1,13 +1,18 @@
 package com.pby.gamstudy.dao;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.pby.gamstudy.CheckSumBuilder;
 import com.pby.gamstudy.bean.IMMessage;
 import com.pby.gamstudy.bean.IMUser;
+import com.pby.gamstudy.bean.Message;
 import com.pby.gamstudy.util.gson.GsonUtil;
 import okhttp3.*;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,16 +34,19 @@ public class IMDao {
      * @param userId
      * @return
      */
-    public IMUser createUser(String userId) {
+    public String getToken(String userId) {
         Response response = getResponse(USER_URL + "create.action", () -> new FormBody.Builder()
                 .add("accid", userId)
                 .build());
-        if (response != null && response.body() != null) {
-            try {
-                return GsonUtil.getValues(response.body().string(), "info", IMUser.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        String token = null;
+        if ((token = getTokenFromResponse(response)) != null) {
+            return token;
+        }
+        response = getResponse(USER_URL + "refreshToken.action", () -> new FormBody.Builder()
+                .add("accid", userId)
+                .build());
+        if ((token = getTokenFromResponse(response)) != null) {
+            return token;
         }
         return null;
     }
@@ -46,16 +54,16 @@ public class IMDao {
     /**
      * 发送消息
      *
-     * @param imMessage
+     * @param message
      * @return
      */
-    public boolean sendMessage(IMMessage imMessage) {
+    public boolean sendMessage(Message message) {
         Response response = getResponse(MESSAGE_URL + "sendMsg.action", () -> new FormBody.Builder()
-                .add("from", imMessage.getFromUserId())
+                .add("from", message.getFromUser().getId())
                 .add("ope", "0")
-                .add("to", imMessage.getToUserId())
+                .add("to", message.getToUser().getId())
                 .add("type", "0")
-                .add("body", imMessage.getContent())
+                .add("body", formatJson(message.getContent()))
                 .build());
         if (response != null && response.body() != null) {
             try {
@@ -64,12 +72,18 @@ public class IMDao {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return false;
     }
 
-    public List<IMMessage> findHistoryMessage(String fromUserId, String toUserId) {
+    private String formatJson(String message) {
+        return "{\"msg\":\"" + message + "\"}";
+    }
+
+    public List<Message> findHistoryMessage(String fromUserId, String toUserId) {
         Response response = getResponse(HISTORY_URL + "querySessionMsg.action", new RequestBodyCallback() {
             @Override
             public RequestBody generateRequestBody() {
@@ -78,11 +92,57 @@ public class IMDao {
                         .add("to", toUserId)
                         .add("begintime", String.valueOf(System.currentTimeMillis() - 24 * 60 * 60 * 1000))
                         .add("endtime", String.valueOf(System.currentTimeMillis()))
-                        .add("limit", String.valueOf(100))
+                        .add("limit", String.valueOf(50))
                         .add("reverse", "1")
                         .build();
             }
         });
+        return parseMessageResponse(response);
+    }
+
+    private List<Message> parseMessageResponse(Response response) {
+        try {
+            if (response != null && response.body() != null) {
+                final String body = response.body().string();
+                JsonObject jsonObject = new JsonParser().parse(body).getAsJsonObject();
+                if (GsonUtil.getCode(jsonObject) == 200) {
+                    List<Message> messages = new ArrayList<>();
+                    JsonArray jsonArray = jsonObject.getAsJsonArray("msgs");
+                    if (jsonArray != null) {
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            JsonObject jsonObject1 = jsonArray.get(i).getAsJsonObject();
+                            long time = jsonObject1.get("sendtime").getAsLong();
+                            String id = jsonObject1.get("msgid").getAsString();
+                            String content = jsonObject1.get("body").getAsJsonObject().get("msg").getAsString();
+                            String sendUserId = jsonObject1.get("from").getAsString();
+                            Message message = new Message();
+                            message.setTime(time);
+                            message.setId(id);
+                            message.setContent(content);
+                            message.setSendUserId(sendUserId);
+                            messages.add(message);
+                        }
+                    }
+                    return messages;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String getTokenFromResponse(Response response) {
+        if (response != null && response.body() != null) {
+            try {
+                IMUser imUser = GsonUtil.getValues(response.body().string(), "info", IMUser.class);
+                if (imUser != null) {
+                    return imUser.getToken();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return null;
     }
 

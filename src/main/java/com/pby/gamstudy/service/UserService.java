@@ -1,6 +1,5 @@
 package com.pby.gamstudy.service;
 
-import com.pby.gamstudy.bean.IMUser;
 import com.pby.gamstudy.bean.User;
 import com.pby.gamstudy.bean.body.UserProfileResponseBody;
 import com.pby.gamstudy.dao.IMDao;
@@ -18,18 +17,18 @@ public class UserService {
     @Autowired
     UserDao userDao;
     @Autowired
-    IMDao mIMDao;
+    IMDao imDao;
     @Autowired
-    PostDao mPostDao;
+    PostDao postDao;
 
     public User findUser(String id) {
         User user = userDao.findUser(id);
         if (user == null) {
-            final IMUser imUser = mIMDao.createUser(id);
-            if (imUser != null) {
+            final String token = imDao.getToken(id);
+            if (token != null) {
                 user = new User();
                 user.setId(id);
-                user.setToken(imUser.getToken());
+                user.setToken(token);
                 user.setHead(HEAD);
                 user.setNickName(NICK_NAME);
                 user.setTime(System.currentTimeMillis());
@@ -61,7 +60,7 @@ public class UserService {
     public UserProfileResponseBody getUserProfile(String userId) {
         UserProfileResponseBody userProfileResponseBody = new UserProfileResponseBody();
         userProfileResponseBody.setUser(findUserNoToken(userId));
-        userProfileResponseBody.setPostList(mPostDao.findPost(userId));
+        userProfileResponseBody.setPostList(postDao.findPost(userId));
         return userProfileResponseBody;
     }
 }

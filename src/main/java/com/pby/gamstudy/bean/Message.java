@@ -3,6 +3,7 @@ package com.pby.gamstudy.bean;
 public class Message {
 
     private String id;
+    private String sendUserId;
     private User fromUser;
     private User toUser;
     private String content;
@@ -46,5 +47,13 @@ public class Message {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public String getSendUserId() {
+        return sendUserId;
+    }
+
+    public void setSendUserId(String sendUserId) {
+        this.sendUserId = sendUserId;
     }
 }
