@@ -9,6 +9,8 @@ public class MessageItem {
     private String recentContent;
     private int fromUserUnReadCount;
     private int toUserUnReadCount;
+    private int fromUseDelete;
+    private int toUserDelete;
     private long recentTime;
     private long time;
 
@@ -83,5 +85,21 @@ public class MessageItem {
 
     public void setToUserUnReadCount(int toUserUnReadCount) {
         this.toUserUnReadCount = toUserUnReadCount;
+    }
+
+    public int getFromUseDelete() {
+        return fromUseDelete;
+    }
+
+    public void setFromUseDelete(int fromUseDelete) {
+        this.fromUseDelete = fromUseDelete;
+    }
+
+    public int getToUserDelete() {
+        return toUserDelete;
+    }
+
+    public void setToUserDelete(int toUserDelete) {
+        this.toUserDelete = toUserDelete;
     }
 }

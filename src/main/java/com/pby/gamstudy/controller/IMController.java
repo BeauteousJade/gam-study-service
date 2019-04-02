@@ -30,7 +30,33 @@ public class IMController {
     }
 
     @PostMapping("/findHistoryMessage")
-    public List<Message> findHistoryMessage(@Param("fromUserId") String fromUserId, @Param("toUserId") String toUserId) {
-        return imService.findHistoryMessage(fromUserId, toUserId);
+    public List<Message> findHistoryMessage(@Param("fromUserId") String fromUserId, @Param("toUserId") String toUserId, @Param("startTime") long startTime, @Param("endTime") long endTime) {
+        return imService.findHistoryMessage(fromUserId, toUserId, startTime, endTime);
+    }
+
+    @PostMapping("/resetFromUserUnReadCount")
+    public boolean resetFromUserUnReadCount(@Param("id") String id) {
+        return imService.resetFromUserUnReadCount(id);
+    }
+
+
+    @PostMapping("/resetToUserUnReadCount")
+    public boolean resetToUserUnReadCount(@Param("id") String id) {
+        return imService.resetToUserUnReadCount(id);
+    }
+
+    @PostMapping("/findSingleMessageItem")
+    public MessageItem findSingleMessageItem(@Param("fromUserId") String fromUserId, @Param("toUserId") String toUserId) {
+        return imService.findSingleMessageItem(fromUserId, toUserId);
+    }
+
+    @PostMapping("/deleteMessageItemForFromUser")
+    public boolean deleteMessageItemForFromUser(@Param("id") String id) {
+        return imService.deleteMessageItemForFromUser(id);
+    }
+
+    @PostMapping("/deleteMessageItemForToUser")
+    public boolean deleteMessageItemForToUser(@Param("id") String id) {
+        return imService.deleteMessageItemForToUser(id);
     }
 }

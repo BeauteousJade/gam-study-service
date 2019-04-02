@@ -63,11 +63,11 @@ public class IMService {
         return messageItemDao.findMessageItem(userId);
     }
 
-    public List<Message> findHistoryMessage(String fromUserId, String toUserId) {
+    public List<Message> findHistoryMessage(String fromUserId, String toUserId, long startTime, long endTime) {
         List<Message> result = new ArrayList<>();
         User fromUser = userDao.findBasicUser(fromUserId);
         User toUser = userDao.findBasicUser(toUserId);
-        result.addAll(getHistoryMessage(fromUser, toUser, imDao.findHistoryMessage(fromUserId, toUserId)));
+        result.addAll(getHistoryMessage(fromUser, toUser, imDao.findHistoryMessage(fromUserId, toUserId, startTime, endTime)));
         return result;
     }
 
@@ -85,5 +85,26 @@ public class IMService {
             return historyMessage;
         }
         return new ArrayList<>();
+    }
+
+    public boolean resetFromUserUnReadCount(String id) {
+        return messageItemDao.resetFromUserUnReadCount(id) == 1;
+    }
+
+    public boolean resetToUserUnReadCount(String id) {
+        return messageItemDao.resetToUserUnReadCount(id) == 1;
+    }
+
+    public MessageItem findSingleMessageItem(String fromUserId, String toUserId) {
+        return messageItemDao.findMessageItemByUserId(fromUserId, toUserId);
+    }
+
+    public boolean deleteMessageItemForFromUser(String id) {
+        return messageItemDao.deleteMessageItemForFromUser(id) == 1;
+    }
+
+
+    public boolean deleteMessageItemForToUser(String id) {
+        return messageItemDao.deleteMessageItemForToUser(id) == 1;
     }
 }

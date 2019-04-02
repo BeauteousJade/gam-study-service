@@ -83,20 +83,15 @@ public class IMDao {
         return "{\"msg\":\"" + message + "\"}";
     }
 
-    public List<Message> findHistoryMessage(String fromUserId, String toUserId) {
-        Response response = getResponse(HISTORY_URL + "querySessionMsg.action", new RequestBodyCallback() {
-            @Override
-            public RequestBody generateRequestBody() {
-                return new FormBody.Builder()
-                        .add("from", fromUserId)
-                        .add("to", toUserId)
-                        .add("begintime", String.valueOf(System.currentTimeMillis() - 24 * 60 * 60 * 1000))
-                        .add("endtime", String.valueOf(System.currentTimeMillis()))
-                        .add("limit", String.valueOf(50))
-                        .add("reverse", "1")
-                        .build();
-            }
-        });
+    public List<Message> findHistoryMessage(String fromUserId, String toUserId, long startTime, long endTime) {
+        Response response = getResponse(HISTORY_URL + "querySessionMsg.action", () -> new FormBody.Builder()
+                .add("from", fromUserId)
+                .add("to", toUserId)
+                .add("begintime", String.valueOf(startTime))
+                .add("endtime", String.valueOf(endTime))
+                .add("limit", String.valueOf(100))
+                .add("reverse", "1")
+                .build());
         return parseMessageResponse(response);
     }
 
