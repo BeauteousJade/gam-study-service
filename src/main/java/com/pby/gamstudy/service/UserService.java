@@ -1,12 +1,15 @@
 package com.pby.gamstudy.service;
 
+import com.pby.gamstudy.bean.MapBean;
 import com.pby.gamstudy.bean.User;
+import com.pby.gamstudy.bean.body.MineResponseBody;
 import com.pby.gamstudy.bean.body.UserProfileResponseBody;
-import com.pby.gamstudy.dao.IMDao;
-import com.pby.gamstudy.dao.PostDao;
-import com.pby.gamstudy.dao.UserDao;
+import com.pby.gamstudy.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Repository
@@ -20,6 +23,10 @@ public class UserService {
     IMDao imDao;
     @Autowired
     PostDao postDao;
+    @Autowired
+    KindDao kindDao;
+    @Autowired
+    CardDao cardDao;
 
     public User findUser(String id) {
         User user = userDao.findUser(id);
@@ -62,6 +69,25 @@ public class UserService {
         userProfileResponseBody.setUser(findUserNoToken(userId));
         userProfileResponseBody.setPostList(postDao.findPost(userId));
         return userProfileResponseBody;
+    }
+
+    public MineResponseBody findUserInfo(String id) {
+        User user = userDao.findUser(id);
+        if (user != null) {
+            user.setToken(null);
+        }
+        List<MapBean> list = new ArrayList<>();
+        // 占位符
+        list.add(null);
+        list.add(new MapBean("分类", String.valueOf(kindDao.getKindCountByUserId(id))));
+        list.add(new MapBean("卡片", String.valueOf(cardDao.getCardCountByUserId(id))));
+        list.add(null);
+        list.add(new MapBean("设置", String.valueOf(-1)));
+        list.add(new MapBean("关于", String.valueOf(-1)));
+        MineResponseBody mineResponseBody = new MineResponseBody();
+        mineResponseBody.setUser(user);
+        mineResponseBody.setList(list);
+        return mineResponseBody;
     }
 }
 

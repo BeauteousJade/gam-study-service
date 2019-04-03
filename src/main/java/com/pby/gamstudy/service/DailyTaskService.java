@@ -4,6 +4,7 @@ import com.pby.gamstudy.bean.Card;
 import com.pby.gamstudy.bean.DailyTask;
 import com.pby.gamstudy.configuration.redis.RedisManager;
 import com.pby.gamstudy.dao.CardDao;
+import com.pby.gamstudy.dao.UserDao;
 import com.pby.gamstudy.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,8 @@ public class DailyTaskService {
 
     @Autowired
     CardDao mCardDao;
+    @Autowired
+    UserDao userDao;
     @Autowired
     RedisManager mRedisManager;
 
@@ -44,7 +47,7 @@ public class DailyTaskService {
 
     public boolean sign(String userId) {
         mRedisManager.set(userId + DAILY_SIGN_SUFFIX, true, TimeUtil.getOffsetTimeForNextDay(), TimeUnit.MILLISECONDS);
-        return true;
+        return userDao.increaseScore(userId) == 1;
     }
 
     public boolean updateDailyCard(String userId, String cardId) {

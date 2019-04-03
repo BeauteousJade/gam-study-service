@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface UserDao {
 
-    @Insert("insert into user (id, head, nickName, time, token) values(#{id}, #{head}, #{nickName},#{time}, #{token})")
+    @Insert("insert into user (id, head, nickName,score time, token) values(#{id}, #{head}, #{nickName}, #{score}, #{time}, #{token})")
     int register(User user);
 
     @Select("select * from user where id = #{id}")
@@ -21,4 +21,7 @@ public interface UserDao {
 
     @Select("select * from user where id = #{id}")
     User findBasicUser(@Param("id") String id);
+
+    @Update("update user set score = score + 5 where id = #{id}")
+    int increaseScore(@Param("id") String id);
 }

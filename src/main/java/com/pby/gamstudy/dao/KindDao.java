@@ -28,4 +28,7 @@ public interface KindDao {
 
     @Update("update kind set count = count + 1  where id = #{id}")
     int increaseCount(@Param("id") String id);
+
+    @Select("select count(1) from kind where userId = #{userId}")
+    int getKindCountByUserId(@Param("userId") String userId);
 }

@@ -8,6 +8,7 @@ public class User {
     private String head;
     private String token;
     private long time;
+    private int score;
     private List<Follow> followUserList;
     private List<Follow> fansUserList;
 
@@ -74,5 +75,13 @@ public class User {
 
     public void setFansUserList(List<Follow> fansUserList) {
         this.fansUserList = fansUserList;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

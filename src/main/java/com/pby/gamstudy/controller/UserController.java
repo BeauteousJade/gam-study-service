@@ -1,6 +1,7 @@
 package com.pby.gamstudy.controller;
 
 import com.pby.gamstudy.bean.User;
+import com.pby.gamstudy.bean.body.MineResponseBody;
 import com.pby.gamstudy.bean.body.UserProfileResponseBody;
 import com.pby.gamstudy.service.UserService;
 import org.apache.ibatis.annotations.Param;
@@ -24,5 +25,10 @@ public class UserController {
     @PostMapping("/profile")
     public UserProfileResponseBody getUserProfile(@Param("userId") String userId) {
         return mUserService.getUserProfile(userId);
+    }
+
+    @PostMapping("/mine")
+    public MineResponseBody findUserInfo(@Param("id") String id) {
+        return mUserService.findUserInfo(id);
     }
 }

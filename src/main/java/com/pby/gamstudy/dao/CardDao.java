@@ -21,4 +21,7 @@ public interface CardDao {
 
     @Select("select * from card where userId = #{userId} limit 50")
     List<Card> findDailyCard(@Param("userId") String userId);
+
+    @Select(("select count(1) from card  where userId = #{userId}"))
+    int getCardCountByUserId(@Param("userId") String userId);
 }
