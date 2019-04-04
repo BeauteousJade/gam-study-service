@@ -7,6 +7,7 @@ public class User {
     private String nickName;
     private String head;
     private String token;
+    private int isFollow;
     private long time;
     private int score;
     private List<Follow> followUserList;
@@ -83,5 +84,13 @@ public class User {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public int getIsFollow() {
+        return isFollow;
+    }
+
+    public void setIsFollow(int isFollow) {
+        this.isFollow = isFollow;
     }
 }

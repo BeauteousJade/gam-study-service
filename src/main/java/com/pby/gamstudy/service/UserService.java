@@ -5,8 +5,11 @@ import com.pby.gamstudy.bean.User;
 import com.pby.gamstudy.bean.body.MineResponseBody;
 import com.pby.gamstudy.bean.body.UserProfileResponseBody;
 import com.pby.gamstudy.dao.*;
+import com.pby.gamstudy.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,13 @@ import java.util.List;
 public class UserService {
     private static final String NICK_NAME = "pby";
     private static final String HEAD = "https://upload.jianshu.io/users/upload_avatars/9124992/c56d68b9-89af-48a2-a93a-48e7dcac778f.jpg";
+    private static final String AVATAR_PATH = "avatar";
+
+
+    @Value("${file.rootPath}")
+    String rootPath;
+    @Value("${localHost}")
+    String localHost;
 
     @Autowired
     UserDao userDao;
@@ -55,8 +65,8 @@ public class UserService {
         return user;
     }
 
-    public User findUserNoToken(String id) {
-        User user = findUser(id);
+    public User findUserNoToken(String fromUserId, String toUserId) {
+        User user = userDao.findUserWithFollow(fromUserId, toUserId);
         if (user != null) {
             user.setToken(null);
         }
@@ -64,10 +74,10 @@ public class UserService {
     }
 
 
-    public UserProfileResponseBody getUserProfile(String userId) {
+    public UserProfileResponseBody getUserProfile(String fromUserId, String toUserId) {
         UserProfileResponseBody userProfileResponseBody = new UserProfileResponseBody();
-        userProfileResponseBody.setUser(findUserNoToken(userId));
-        userProfileResponseBody.setPostList(postDao.findPost(userId));
+        userProfileResponseBody.setUser(findUserNoToken(fromUserId, toUserId));
+        userProfileResponseBody.setPostList(postDao.findPost(toUserId));
         return userProfileResponseBody;
     }
 
@@ -88,6 +98,24 @@ public class UserService {
         mineResponseBody.setUser(user);
         mineResponseBody.setList(list);
         return mineResponseBody;
+    }
+
+    public String updateAvatar(String userId, MultipartFile file) {
+        String path = FileUtil.writeFile(rootPath, AVATAR_PATH, localHost, file);
+        if (path != null) {
+            if (userDao.updateAvatar(userId, path) == 1) {
+                return "\"" + path + "\"";
+            }
+        }
+        return null;
+    }
+
+    public List<User> findFollowList(String userId) {
+        return userDao.findFollowList(userId);
+    }
+
+    public List<User> findFansList(String userId) {
+        return userDao.findFansList(userId);
     }
 }
 
