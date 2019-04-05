@@ -14,7 +14,10 @@ public interface CardDao {
     int insertKind(Card card);
 
     @Select("select * from card where userId = #{userId} and kindId = #{kindId}")
-    List<Card> findAllCard(@Param("userId") String userId, @Param("kindId") String kindId);
+    List<Card> findAllCardByKindIdAndUserId(@Param("userId") String userId, @Param("kindId") String kindId);
+
+    @Select("select * from card where userId = #{userId}")
+    List<Card> findAllCardByUserId(@Param("userId") String userId);
 
     @Update("update card set editImageUrl  = #{editImageUrl}, answer = #{answer}, updateTime = #{updateTime} where id = #{id}")
     int editCard(Card card);

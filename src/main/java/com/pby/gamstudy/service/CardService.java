@@ -53,7 +53,11 @@ public class CardService {
     }
 
     public List<Card> findAllCard(String userId, String kindId) {
-        return mCardDao.findAllCard(userId, kindId);
+        if (kindId != null) {
+            return mCardDao.findAllCardByKindIdAndUserId(userId, kindId);
+        } else {
+            return mCardDao.findAllCardByUserId(userId);
+        }
     }
 
 
