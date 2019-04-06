@@ -20,12 +20,13 @@ public class ApkService {
     String localHost;
 
     public String checkUpdate(String code) {
+        final String fileName = code + ".apk";
         File file = new File(rootPath + File.separator + APK_PATH);
         if (file.exists() && file.isDirectory()) {
             File[] files = file.listFiles();
             if (!ArraysUtil.isEmpty(files)) {
                 for (File f : files) {
-                    if (f.getName().compareTo(code) > 0) {
+                    if (f.getName().compareTo(fileName) > 0) {
                         return "\"" + localHost + File.separator + APK_PATH + File.separator + f.getName() + "\"";
                     }
                 }
@@ -42,6 +43,7 @@ public class ApkService {
                 response.setContentType("application/octet-stream");//
                 response.setHeader("content-type", "application/octet-stream");
                 response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
+                response.setContentLengthLong(file.length());
                 byte[] buffer = new byte[1024];
                 FileInputStream fis = null;
                 BufferedInputStream bis = null;
