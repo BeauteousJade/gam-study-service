@@ -117,5 +117,9 @@ public class UserService {
     public List<User> findFansList(String userId) {
         return userDao.findFansList(userId);
     }
+
+    public boolean modifyUserName(String userId, String userName) {
+        return userDao.modifyUserName(userName, userId) == 1;
+    }
 }
 

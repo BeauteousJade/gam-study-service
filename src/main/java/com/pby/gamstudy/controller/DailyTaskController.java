@@ -27,6 +27,11 @@ public class DailyTaskController {
         return mDailyTaskService.sign(userId);
     }
 
+    @PostMapping("/commitDailyTask")
+    public boolean commitDailyTask(@Param("userId") String userId) {
+        return mDailyTaskService.commitDailyTask(userId);
+    }
+
     @PostMapping("/updateDailyCard")
     public boolean updateDailyCard(@Param("userId") String userId, @Param("cardId") String cardId) {
         return mDailyTaskService.updateDailyCard(userId, cardId);

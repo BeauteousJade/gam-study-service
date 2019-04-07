@@ -46,9 +46,13 @@ public class UserController {
         return mUserService.findFollowList(userId);
     }
 
-
     @PostMapping("/findFansList")
     public List<User> findFansList(@Param("userId") String userId) {
         return mUserService.findFansList(userId);
+    }
+
+    @PostMapping("/modifyUserName")
+    public boolean modifyUserName(@Param("userId") String userId, @Param("userName") String userName) {
+        return mUserService.modifyUserName(userId, userName);
     }
 }

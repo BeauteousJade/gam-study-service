@@ -27,4 +27,7 @@ public interface CardDao {
 
     @Select(("select count(1) from card  where userId = #{userId}"))
     int getCardCountByUserId(@Param("userId") String userId);
+
+    @Select("select count(1) from card where kindId = #{kindId}")
+    int findCardCountByKindId(@Param("kindId") String kindId);
 }

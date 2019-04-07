@@ -11,6 +11,10 @@ import java.util.List;
 public interface KindDao {
 
     @Select("select * from kind where userId = #{userId} order by recentBrowserTime limit 10")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "count", column = "id", one = @One(select = "com.pby.gamstudy.dao.CardDao.findCardCountByKindId"))
+    })
     List<Kind> findRecentBrowseKind(@Param("userId") String userId);
 
     @Insert("insert into kind(id, userId, name, cover, time, count, recentBrowserTime)" +
@@ -21,6 +25,10 @@ public interface KindDao {
                    @Param("count") int count, @Param("recentBrowserTime") long recentBrowserTime);
 
     @Select("select * from kind where userId = #{userId}")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "count", column = "id", one = @One(select = "com.pby.gamstudy.dao.CardDao.findCardCountByKindId"))
+    })
     List<Kind> findAllKind(@Param("userId") String userId);
 
     @Update("update kind set recentBrowserTime = #{recentBrowserTime} where id = #{id}")

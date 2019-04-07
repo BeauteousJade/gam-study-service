@@ -32,12 +32,11 @@ public interface UserDao {
     @Select("select * from user where id = #{id}")
     User findBasicUser(@Param("id") String id);
 
-    @Update("update user set score = score + 5 where id = #{id}")
-    int increaseScore(@Param("id") String id);
+    @Update("update user set score = score + #{score} where id = #{id}")
+    int increaseScore(@Param("id") String id, @Param("score") int score);
 
     @Update("update user set head = #{head} where id = #{id}")
     int updateAvatar(@Param("id") String id, @Param("head") String head);
-
 
     @Select("select *, (1) as isFollow from user where id in" +
             " (select toUserId from follow where fromUserId = #{userId})")
@@ -46,4 +45,7 @@ public interface UserDao {
     @Select("select *, (select count(1) from follow where fromUserId = #{userId} and toUserId = user.id) as isFollow from user where id in" +
             " (select fromUserId from follow where toUserId = #{userId})")
     List<User> findFansList(@Param("userId") String userId);
+
+    @Update("update user set nickName = #{userName} where id = #{id}")
+    int modifyUserName(@Param("userName") String userName, @Param("id") String id);
 }
