@@ -24,7 +24,7 @@ public interface PostDao {
     })
     List<Post> findPost(@Param("userId") String userId);
 
-    @Select("select *  from post ")
+    @Select("select *  from post order by time DESC limit 100")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "user", column = "userId", one = @One(select = "com.pby.gamstudy.dao.UserDao.findUser")),
@@ -34,7 +34,7 @@ public interface PostDao {
     })
     List<Post> findRecommendPost();
 
-    @Select("select * from post where userId = #{userId} or userId in (select fromUserId from follow where toUserId = #{userId}) ")
+    @Select("select * from post where userId = #{userId} or userId in (select fromUserId from follow where toUserId = #{userId}) order by time DESC")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "user", column = "userId", one = @One(select = "com.pby.gamstudy.dao.UserDao.findUser")),
