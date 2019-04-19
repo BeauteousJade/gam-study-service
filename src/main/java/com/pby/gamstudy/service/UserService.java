@@ -53,6 +53,8 @@ public class UserService {
                     user = null;
                 }
             }
+        } else {
+            user.setToken(imDao.refreshToken(id));
         }
         return user;
     }

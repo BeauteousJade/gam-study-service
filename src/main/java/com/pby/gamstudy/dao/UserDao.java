@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface UserDao {
 
-    @Insert("insert into user (id, head, nickName,score, time, token) values(#{id}, #{head}, #{nickName}, #{score}, #{time}, #{token})")
+    @Insert("insert into user (id, head, nickName,score, time) values(#{id}, #{head}, #{nickName}, #{score}, #{time})")
     int register(User user);
 
     @Select("select * from user where id = #{id}")

@@ -42,7 +42,12 @@ public class IMDao {
         if ((token = getTokenFromResponse(response)) != null) {
             return token;
         }
-        response = getResponse(USER_URL + "refreshToken.action", () -> new FormBody.Builder()
+        return refreshToken(userId);
+    }
+
+    public String refreshToken(String userId) {
+        String token = null;
+        Response response = getResponse(USER_URL + "refreshToken.action", () -> new FormBody.Builder()
                 .add("accid", userId)
                 .build());
         if ((token = getTokenFromResponse(response)) != null) {
